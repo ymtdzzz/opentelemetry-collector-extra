@@ -1,0 +1,2 @@
+# opentelemetry-collector-extra
+WIP
