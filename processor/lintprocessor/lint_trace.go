@@ -7,12 +7,21 @@ import (
 	"go.opentelemetry.io/collector/pdata/ptrace"
 )
 
-type spanLintProcessor struct{}
+type spanLintProcessor struct {
+	enable bool
+	l      *linter.Linter
+}
 
-func newSpanLintProcessor() *spanLintProcessor {
-	return &spanLintProcessor{}
+func newSpanLintProcessor(cfg *Config) *spanLintProcessor {
+	return &spanLintProcessor{
+		enable: cfg.Enable,
+		l:      linter.NewLinter(cfg.LinterOpts()...),
+	}
 }
 
 func (p *spanLintProcessor) processTraces(ctx context.Context, td ptrace.Traces) (ptrace.Traces, error) {
-	return linter.OtelLinter.RunTrace(td)
+	if p.enable {
+		return p.l.RunTrace(td)
+	}
+	return td, nil
 }

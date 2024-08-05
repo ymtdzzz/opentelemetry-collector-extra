@@ -7,12 +7,18 @@ import (
 	"go.opentelemetry.io/collector/pdata/plog"
 )
 
-type logLintProcessor struct{}
+type logLintProcessor struct {
+	enable bool
+	l      *linter.Linter
+}
 
-func newLogLintProcessor() *logLintProcessor {
-	return &logLintProcessor{}
+func newLogLintProcessor(cfg *Config) *logLintProcessor {
+	return &logLintProcessor{
+		enable: cfg.Enable,
+		l:      linter.NewLinter(cfg.LinterOpts()...),
+	}
 }
 
 func (p *logLintProcessor) processLogs(ctx context.Context, ld plog.Logs) (plog.Logs, error) {
-	return linter.OtelLinter.RunLog(ld)
+	return p.l.RunLog(ld)
 }

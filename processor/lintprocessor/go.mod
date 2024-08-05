@@ -3,8 +3,9 @@ module github.com/ymtdzzz/opentelemetry-collector-extra/processor/lintprocessor
 go 1.22.4
 
 require (
+	github.com/mcuadros/go-defaults v1.2.0
 	github.com/stretchr/testify v1.9.0
-	github.com/ymtdzzz/otel-lint v0.0.1
+	github.com/ymtdzzz/otel-lint v0.0.3
 	go.opentelemetry.io/collector/component v0.106.1
 	go.opentelemetry.io/collector/confmap v0.106.1
 	go.opentelemetry.io/collector/consumer v0.106.1

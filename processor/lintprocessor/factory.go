@@ -3,6 +3,7 @@ package lintprocessor
 import (
 	"context"
 
+	"github.com/mcuadros/go-defaults"
 	"github.com/ymtdzzz/opentelemetry-collector-extra/processor/lintprocessor/internal/metadata"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
@@ -22,9 +23,10 @@ func NewFactory() processor.Factory {
 		processor.WithMetrics(createMetricsProcessor, metadata.MetricsStability))
 }
 
-// NOTE: This isn't a valid configuration because the processor would do no work.
 func createDefaultConfig() component.Config {
-	return &Config{}
+	cfg := new(Config)
+	defaults.SetDefaults(cfg)
+	return cfg
 }
 
 func createTracesProcessor(
@@ -33,14 +35,14 @@ func createTracesProcessor(
 	cfg component.Config,
 	nextConsumer consumer.Traces,
 ) (processor.Traces, error) {
-	// oCfg := cfg.(*Config)
+	oCfg := cfg.(*Config)
 
 	return processorhelper.NewTracesProcessor(
 		ctx,
 		set,
 		cfg,
 		nextConsumer,
-		newSpanLintProcessor().processTraces,
+		newSpanLintProcessor(oCfg).processTraces,
 		processorhelper.WithCapabilities(processorCapabilities))
 }
 
@@ -50,14 +52,14 @@ func createLogsProcessor(
 	cfg component.Config,
 	nextConsumer consumer.Logs,
 ) (processor.Logs, error) {
-	// oCfg := cfg.(*Config)
+	oCfg := cfg.(*Config)
 
 	return processorhelper.NewLogsProcessor(
 		ctx,
 		set,
 		cfg,
 		nextConsumer,
-		newLogLintProcessor().processLogs,
+		newLogLintProcessor(oCfg).processLogs,
 		processorhelper.WithCapabilities(processorCapabilities))
 }
 
@@ -67,13 +69,13 @@ func createMetricsProcessor(
 	cfg component.Config,
 	nextConsumer consumer.Metrics,
 ) (processor.Metrics, error) {
-	// oCfg := cfg.(*Config)
+	oCfg := cfg.(*Config)
 
 	return processorhelper.NewMetricsProcessor(
 		ctx,
 		set,
 		cfg,
 		nextConsumer,
-		newMetricLintProcessor().processMetrics,
+		newMetricLintProcessor(oCfg).processMetrics,
 		processorhelper.WithCapabilities(processorCapabilities))
 }

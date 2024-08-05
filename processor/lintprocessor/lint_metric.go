@@ -7,12 +7,18 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
-type metricLintProcessor struct{}
+type metricLintProcessor struct {
+	enable bool
+	l      *linter.Linter
+}
 
-func newMetricLintProcessor() *metricLintProcessor {
-	return &metricLintProcessor{}
+func newMetricLintProcessor(cfg *Config) *metricLintProcessor {
+	return &metricLintProcessor{
+		enable: cfg.Enable,
+		l:      linter.NewLinter(cfg.LinterOpts()...),
+	}
 }
 
 func (p *metricLintProcessor) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
-	return linter.OtelLinter.RunMetric(md)
+	return p.l.RunMetric(md)
 }
