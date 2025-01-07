@@ -1,0 +1,9 @@
+type: newrelic
+scope_name: otelcol/newrelic
+
+status:
+  class: receiver
+  stability:
+    development: [traces]
+  codeowners:
+    active: [ymtdzzz]

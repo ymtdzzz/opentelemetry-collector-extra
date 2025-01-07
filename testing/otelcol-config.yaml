@@ -1,0 +1,15 @@
+receivers:
+  newrelic:
+    server_cert: ./server-cert.pem
+    server_key: ./server-key.pem
+processors:
+exporters:
+  otlp:
+    endpoint: localhost:4317
+    tls:
+      insecure: true
+service:
+  pipelines:
+    traces:
+      receivers: [newrelic]
+      exporters: [otlp]
