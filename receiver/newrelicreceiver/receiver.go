@@ -214,17 +214,5 @@ func (nrr *newrelicReceiver) handleInvokeRawMethod(w http.ResponseWriter, req *h
 		_ = nrr.nextTracesConsumer.ConsumeTraces(req.Context(), otelspan)
 
 		w.WriteHeader(http.StatusOK)
-	} else if method == "analytic_event_data" {
-		bodyBytes, err := io.ReadAll(req.Body)
-		if err != nil {
-			log.Printf("error reading body: %v\n", err)
-			return
-		}
-		tx, err := newrelic.ParseTransactionEventData(bodyBytes)
-		if err != nil {
-			log.Printf("error parsing payload: %v\n", err)
-			return
-		}
-		log.Printf("Request payload (analytic_event_data):\n%#v\n", tx)
 	}
 }

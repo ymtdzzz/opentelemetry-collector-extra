@@ -59,39 +59,3 @@ type SpanEvent struct {
 	*EventInfo
 	Spans []*Span
 }
-
-// ParsedTransaction is transaction from NewRelic agent
-// see: https://github.com/newrelic/go-agent/blob/82c8f8440ca84eb68e08248d877fa1d0b55da333/v3/newrelic/txn_events.go#L15
-type ParsedTransaction struct {
-	Type              string  `json:"type"`
-	Name              string  `json:"name"`
-	Timestamp         uint64  `json:"timestamp"`
-	NRApdexPerfZone   string  `json:"nr.apdexPerfZone,omitempty"`
-	HasError          bool    `json:"error"`
-	Duration          float64 `json:"duration"`                // seconds
-	QueueDuration     float64 `json:"queueDuration,omitempty"` // seconds
-	ExternalCallCount int64   `json:"externalCallCount,omitempty"`
-	ExternalDuration  float64 `json:"externalDuration,omitempty"` // seconds
-	DatabaseCallCount int64   `json:"databaseCallCount,omitempty"`
-	DatabaseDuration  float64 `json:"databaseDuration,omitempty"` // seconds
-	// TODO: Synthetics related information
-	TotalTime float64 `json:"totalTime"`
-	// TODO: parent information
-	TransactionID string  `json:"guid,omitempty"`
-	TraceID       string  `json:"traceId,omitempty"`
-	Priority      float64 `json:"priority,omitempty"`
-	Sampled       bool    `json:"sampled,omitempty"`
-}
-
-type Transaction struct {
-	*ParsedTransaction
-	UserAttributes  map[string]any
-	AgentAttributes map[string]any
-}
-
-// TransactionEvent is full transaction event from NewRelic agent
-type TransactionEvent struct {
-	RunID string
-	*EventInfo
-	Transactions []*Transaction
-}
